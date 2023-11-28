@@ -57,24 +57,45 @@ ids = set()
 #                     result.append([id, product_title, release_date, artist, category, label, img_link])
 
 
-with open("links.csv") as f:
-    reader = csv.reader(f)
-    next(reader)
-    for row in reader:
-        i, id, link = row
-        if any([os.path.exists(f"{j}/{id}.webp") for j in glob.glob("*")]):
-            print("skip ", id)
-            continue
-        else:
-            print("download ", id)
-        img_link, product_title, artist, category, release_date, label = parse_link(link)
-        if not os.path.exists(category):
-            os.mkdir(category)
-        download_picture(img_link, f"{category}/{id}")
-        print(*[id, product_title, release_date, artist, category, label, img_link])
-        result.append([id, product_title, release_date, artist, category, label, img_link])
+# with open("links.csv") as f:
+#     reader = csv.reader(f)
+#     next(reader)
+#     for row in reader:
+#         i, id, link = row
+#         if any([os.path.exists(f"{j}/{id}.webp") for j in glob.glob("*")]):
+#             print("skip ", id)
+#             continue
+#         else:
+#             print("download ", id)
+#         img_link, product_title, artist, category, release_date, label = parse_link(link)
+#         if not os.path.exists(category):
+#             os.mkdir(category)
+#         download_picture(img_link, f"{category}/{id}")
+#         print(*[id, product_title, release_date, artist, category, label, img_link])
+#         result.append([id, product_title, release_date, artist, category, label, img_link])
 
-with open('links_dl02.csv', 'w') as f:
+
+single = {'DVD', 'BD', 'CDシングル', '配信', '配信シングル'}
+album = {'CDアルバム', 'ミニアルバム', 'CDミニアルバム', 'アルバム'}
+result_single = []
+result_album = []
+
+with open("links_after.csv") as f:
+    reader = csv.reader(f)
+    header = next(reader)
+    for row in reader:
+        if row[4] in single:
+            result_single.append(row)
+        elif row[4] in album:
+            result_album.append(row)
+
+result_single = [header] + sorted(result_single, key=lambda x:x[2])
+result_album = [header] + sorted(result_album, key=lambda x:x[2])
+
+with open('singles_info.csv', 'w') as f:
     writer = csv.writer(f)
-    writer.writerow(["id", "product_title", "release_date", "artist", "category", "label", "img_link"])
-    writer.writerows(sorted(result, key=lambda x:x[2]))
+    writer.writerows(result_single)
+
+with open('albums_info.csv', 'w') as f:
+    writer = csv.writer(f)
+    writer.writerows(result_album)
