@@ -122,5 +122,5 @@ ids = set()
 #     writer.writerow(["albumId", "id"])
 #     writer.writerows(result)
 
-a = parse_link('http://www.up-front-works.jp/release/detail/EPCE-5346/')
-download_picture(a[0], 'EPCE-5346')
+a = parse_link('http://www.up-front-works.jp/release/detail/EPCE-7769/')
+download_picture(a[0], 'EPCE-7769')
