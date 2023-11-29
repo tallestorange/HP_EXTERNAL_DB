@@ -6,6 +6,7 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 import glob
+import collections
 
 
 def download_picture(url, id):
@@ -75,27 +76,51 @@ ids = set()
 #         result.append([id, product_title, release_date, artist, category, label, img_link])
 
 
-single = {'DVD', 'BD', 'CDシングル', '配信', '配信シングル'}
-album = {'CDアルバム', 'ミニアルバム', 'CDミニアルバム', 'アルバム'}
-result_single = []
-result_album = []
 
-with open("links_after.csv") as f:
-    reader = csv.reader(f)
-    header = next(reader)
-    for row in reader:
-        if row[4] in single:
-            result_single.append(row)
-        elif row[4] in album:
-            result_album.append(row)
+# with open("album.csv") as f:
+#     reader = csv.reader(f)
+#     header = next(reader)
+#     a = [row for row in reader]
 
-result_single = [header] + sorted(result_single, key=lambda x:x[2])
-result_album = [header] + sorted(result_album, key=lambda x:x[2])
+# with open("album_info.csv") as f:
+#     reader = csv.reader(f)
+#     header = next(reader)
+#     b = []
+#     for row in reader:
+#         c =  "/".join(map(str, map(int, row[2].split("/"))))
+#         b.append([row[0], row[1], c, row[3], row[4], row[5], row[6]])
 
-with open('singles_info.csv', 'w') as f:
-    writer = csv.writer(f)
-    writer.writerows(result_single)
 
-with open('albums_info.csv', 'w') as f:
-    writer = csv.writer(f)
-    writer.writerows(result_album)
+# ac = collections.Counter([i[2] for i in a])
+# bc = collections.Counter([i[2] for i in b])
+# result = []
+
+
+# for i in a:
+#     albumID,albumName,releaseDate,albumCategory,artistName,labelName = i
+#     for j in b:
+#         id,product_title,release_date,artist,category,label,img_link = j
+#         if albumName == product_title:
+#             print(albumID, id)
+#             result.append([albumID, id])
+#             break
+#         elif releaseDate == release_date:
+#             if ac[releaseDate] == 1 and bc[releaseDate] == 1:
+#                 print(albumID, id)
+#                 result.append([albumID, id])
+#                 break
+#             else:
+#                 result.append([albumID, id, albumName, release_date])
+#                 break
+#     else:
+#         result.append([albumID, id, albumName, release_date])
+#         pass
+
+
+# with open("album_id.csv", "w") as f:
+#     writer = csv.writer(f)
+#     writer.writerow(["albumId", "id"])
+#     writer.writerows(result)
+
+a = parse_link('http://www.up-front-works.jp/release/detail/EPCE-5346/')
+download_picture(a[0], 'EPCE-5346')
